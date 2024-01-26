@@ -15,14 +15,14 @@ participant entry as Entry Gate
 participant exit as Exit Gate
 participant app as Parking lot service
 
-rect rgb(105,105,105)
+rect rgb(250, 249, 246)
 note right of car : Entering into parking lot
 car ->> entry : GetParkingTicket()
 entry ->> app : GetParkingTicket(Vehicle)
 app -->> entry : ParkingTicket
 entry -->> car : ParkingTicket
 end
-rect rgb(128,128,128)
+rect rgb(250, 249, 246)
 note right of car : Exiting from parking lot
 car ->> exit : Exit(ParkingTicket)
 exit ->> app : Exit(ParkingTicket)
