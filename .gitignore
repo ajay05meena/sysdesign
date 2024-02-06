@@ -23,3 +23,5 @@
 hs_err_pid*
 replay_pid*
 .idea
+LRU Cache/.gradle
+LRU Cache/build
