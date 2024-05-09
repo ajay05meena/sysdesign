@@ -9,11 +9,12 @@ public class LRUCache<K, V> implements Cache<K, V> {
     // This is cache size. If cache reaches this size than least recently used key will be evicted.
     private final int maxSize;
     private final Map<K, Node<K, V>> data;
-    private DoublyLinkedList<K, V> queue;
+    private final DoublyLinkedList<K, V> queue;
 
     public LRUCache(int maxSize) {
         this.maxSize = maxSize;
         this.data = new HashMap<>();
+        this.queue = new DoublyLinkedList<>();
     }
 
     @Override
@@ -30,17 +31,11 @@ public class LRUCache<K, V> implements Cache<K, V> {
     @Override
     public void set(K key, V value) {
         Node<K, V> node = new Node<>(key, value);
-        if(this.queue == null){
-            this.queue = new DoublyLinkedList<>(node);
-            this.data.put(key, node);
-        }else {
-            if (this.queue.getSize() >= maxSize) {
-                K keyToRemove = this.queue.deleteCurrentHead().getKey();
-                this.data.remove(keyToRemove);
-            }
-
-            this.data.put(key, node);
-            this.queue.addNodeToLast(node);
+        if (this.queue.getSize() >= maxSize) {
+            K keyToRemove = this.queue.deleteCurrentHead().getKey();
+            this.data.remove(keyToRemove);
         }
+        this.data.put(key, node);
+        this.queue.addNodeToLast(node);
     }
 }

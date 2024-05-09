@@ -15,10 +15,16 @@ public class Node<K, V> {
 
     public void addNext(Node<K, V> node){
         this.next = node;
+        if(node!=null){
+            node.previous = this;
+        }
     }
 
     public void addPrevious(Node<K, V> node){
         this.previous = node;
+        if(node!=null){
+            node.next = this;
+        }
     }
 
     public Node<K, V> getNext(){

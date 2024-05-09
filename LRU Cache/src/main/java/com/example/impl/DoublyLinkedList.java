@@ -3,23 +3,22 @@ package com.example.impl;
 public class DoublyLinkedList<K, V> {
     private Node<K, V> tail;
     private Node<K, V> head;
-    private int size = 0;
+    private int size;
 
-    public DoublyLinkedList (Node<K, V> node){
-        this.tail = node;
-        this.head = node;
-        node.addNext(node);
-        node.addPrevious(node);
-        this.size = 1;
+    public DoublyLinkedList (){
+        this.tail = null;
+        this.head = null;
+        this.size = 0;
     }
 
-
-
-
     public void addNodeToLast(Node<K, V> node){
-        this.tail.addNext(node);
-        node.addPrevious(this.tail);
-        this.tail = node;
+        if(this.tail == null){
+            head = tail = node;
+        }else{
+            tail.addNext(node);
+            node.addPrevious(tail);
+            tail = node;
+        }
         size++;
     }
 
@@ -28,20 +27,34 @@ public class DoublyLinkedList<K, V> {
     }
 
     public void deleteNode(Node<K, V> node) {
-        if(this.head == node){
-            this.head = this.head.getNext();
+        if(node.getPrevious()!=null){
+            node.getPrevious().addNext(node.getNext());
+        }else {
+            head = head.getNext();
         }
-        if(this.tail == node){
-            this.tail = this.tail.getPrevious();
+
+        if(node.getNext() != null){
+            node.getNext().addPrevious(node.getPrevious());
+        }else{
+            tail = node.getPrevious();
         }
-        node.getPrevious().addNext(node.getNext());
         size--;
     }
 
     public Node<K, V> deleteCurrentHead(){
+        if(head == null){
+            return null;
+        }
         Node<K, V> tmp = this.head;
-        this.head = this.head.getNext();
+        if(head == tail){
+            head = tail = null;
+        }else {
+            head = head.getNext();
+            head.addPrevious(null);
+        }
         size--;
+        tmp.addPrevious(null);
+        tmp.addNext(null);
         return tmp;
     }
 }
