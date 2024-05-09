@@ -2,6 +2,8 @@ package com.example.impl;
 
 import com.example.Cache;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +22,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
     @Override
     public V get(K key) {
         Node<K, V> node = data.get(key);
-        if(node == null){
+        if(node == null || node.getExpireAt().isBefore(Instant.now())){
             return null;
         }
         this.queue.deleteNode(node);
@@ -30,7 +32,20 @@ public class LRUCache<K, V> implements Cache<K, V> {
 
     @Override
     public void set(K key, V value) {
-        Node<K, V> node = new Node<>(key, value);
+        Node<K, V> node = new Node<>(key, value, Instant.MAX);
+        setNode(key, node);
+    }
+
+    @Override
+    public void set(K key, V value, Duration duration) {
+        if(duration.isZero() || duration.isNegative()){
+            throw new IllegalArgumentException("Duration can not be negative or zero");
+        }
+        Node<K, V> node = new Node<>(key, value, Instant.now().plus(duration));
+        setNode(key, node);
+    }
+
+    private void setNode(K key, Node<K, V> node) {
         if (this.queue.getSize() >= maxSize) {
             K keyToRemove = this.queue.deleteCurrentHead().getKey();
             this.data.remove(keyToRemove);

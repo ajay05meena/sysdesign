@@ -3,10 +3,13 @@ package com.example;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+
+
 
 public class LruCacheTest {
     @Test
-    public void testCache(){
+    public void testCacheWithoutExpiry(){
         int size = 5;
         Cache<String, String> cache = new CacheBuilder<String, String>().getCacheWithSize(size);
         for(int i =1;i<size+1;i++){
@@ -28,4 +31,13 @@ public class LruCacheTest {
         Assertions.assertEquals("Value#4", cache.get("Key#4"));
     }
 
+    @Test
+    public void testCacheWithExpiry() throws InterruptedException {
+        int size = 1;
+        Cache<String, String> cache = new CacheBuilder<String, String>().getCacheWithSize(size);
+        cache.set("key", "value", Duration.ofSeconds(1L));
+        Assertions.assertEquals("value", cache.get("key"));
+        Thread.sleep(1001);
+        Assertions.assertNull(cache.get("key"));
+    }
 }
