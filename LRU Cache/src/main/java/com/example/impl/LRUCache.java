@@ -5,13 +5,13 @@ import com.example.Cache;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CacheImpl<K, V> implements Cache<K, V> {
+public class LRUCache<K, V> implements Cache<K, V> {
     // This is cache size. If cache reaches this size than least recently used key will be evicted.
     private final int maxSize;
     private final Map<K, Node<K, V>> data;
     private DoublyLinkedList<K, V> queue;
 
-    public CacheImpl(int maxSize) {
+    public LRUCache(int maxSize) {
         this.maxSize = maxSize;
         this.data = new HashMap<>();
     }
