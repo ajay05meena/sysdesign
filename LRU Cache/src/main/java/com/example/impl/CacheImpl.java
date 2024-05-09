@@ -5,11 +5,11 @@ import com.example.Cache;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CacheImpl implements Cache<String, String> {
+public class CacheImpl<K, V> implements Cache<K, V> {
     // This is cache size. If cache reaches this size than least recently used key will be evicted.
     private final int maxSize;
-    private final Map<String, Node<String, String>> data;
-    private DoublyLinkedList<String, String> queue;
+    private final Map<K, Node<K, V>> data;
+    private DoublyLinkedList<K, V> queue;
 
     public CacheImpl(int maxSize) {
         this.maxSize = maxSize;
@@ -17,8 +17,8 @@ public class CacheImpl implements Cache<String, String> {
     }
 
     @Override
-    public String get(String key) {
-        Node<String, String> node = data.get(key);
+    public V get(K key) {
+        Node<K, V> node = data.get(key);
         if(node == null){
             return null;
         }
@@ -28,14 +28,14 @@ public class CacheImpl implements Cache<String, String> {
     }
 
     @Override
-    public void set(String key, String value) {
-        Node<String, String> node = new Node<>(key, value);
+    public void set(K key, V value) {
+        Node<K, V> node = new Node<>(key, value);
         if(this.queue == null){
             this.queue = new DoublyLinkedList<>(node);
             this.data.put(key, node);
         }else {
             if (this.queue.getSize() >= maxSize) {
-                String keyToRemove = this.queue.deleteCurrentHead().getKey();
+                K keyToRemove = this.queue.deleteCurrentHead().getKey();
                 this.data.remove(keyToRemove);
             }
 
